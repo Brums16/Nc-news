@@ -6,7 +6,7 @@ const db = require("../db/connection");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
-afterAll(() => server.close());
+// afterAll(() => server.close());
 
 describe("GET /api/topics", () => {
   test("responds with status code 200", () => {

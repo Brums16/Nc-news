@@ -1,13 +1,15 @@
 {
   "GET /api": {
-    "description": "serves up a json representation of all the available endpoints of the api"
+    "description": "serves up a json representation of all the available endpoints of the api",
+    "requestFormat": null
   },
   "GET /api/topics": {
     "description": "serves an array of all topics",
     "queries": [],
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
-    }
+    },
+    "requestFormat": null
   },
   "GET /api/articles": {
     "description": "serves an array of all articles",
@@ -24,6 +26,7 @@
           "comment_count": 6
         }
       ]
-    }
+    },
+    "requestFormat": null
   }
 }

@@ -1,3 +1,9 @@
-# Northcoders News API
+If you want to run this project locally, you'll need to create two local environments and add the correct PGDATABASE name for that environment
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+## .env.development
+
+PGDATABASE=nc_news
+
+## .env.test
+
+PGDATABASE=nc_news_test

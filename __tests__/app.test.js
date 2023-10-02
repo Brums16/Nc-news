@@ -3,7 +3,7 @@ const data = require("../db/data/test-data");
 const { app } = require("../app.js");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection");
-const { fetchEndpoints } = require("../models/topics-model");
+const expectedEndpoint = require("../endpoints.json");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -66,41 +66,7 @@ describe("GET /api", () => {
       .get("/api")
       .then((response) => {
         const { endpoints } = response.body;
-        const expected = {
-          "GET /api": {
-            description:
-              "serves up a json representation of all the available endpoints of the api",
-            requestFormat: null,
-          },
-          "GET /api/topics": {
-            description: "serves an array of all topics",
-            queries: [],
-            exampleResponse: {
-              topics: [{ slug: "football", description: "Footie!" }],
-            },
-            requestFormat: null,
-          },
-          "GET /api/articles": {
-            description: "serves an array of all articles",
-            queries: ["author", "topic", "sort_by", "order"],
-            exampleResponse: {
-              articles: [
-                {
-                  title: "Seafood substitutions are increasing",
-                  topic: "cooking",
-                  author: "weegembump",
-                  body: "Text from the article..",
-                  created_at: "2018-05-30T15:59:13.341Z",
-                  votes: 0,
-                  comment_count: 6,
-                },
-              ],
-            },
-            requestFormat: null,
-          },
-        };
-
-        expect(endpoints).toEqual(expected);
+        expect(endpoints).toEqual(expectedEndpoint);
       });
   });
 });

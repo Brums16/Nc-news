@@ -1,12 +1,11 @@
 const request = require("supertest");
 const data = require("../db/data/test-data");
-const { app, server } = require("../app.js");
+const { app } = require("../app.js");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
-// afterAll(() => server.close());
 
 describe("GET /api/topics", () => {
   test("responds with status code 200", () => {

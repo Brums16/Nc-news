@@ -30,7 +30,7 @@ exports.fetchArticleById = async (id) => {
   if (!rows[0])
     return Promise.reject({
       status: 404,
-      msg: `No user found for user_id: ${id}`,
+      msg: `No article found for article_id: ${id}`,
     });
   return rows[0];
 };

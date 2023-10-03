@@ -206,7 +206,7 @@ describe("GET /api/articles/:articleid/comments", () => {
         ).toBe(true);
       });
   });
-  test.only("responds with an comments array of objects sorted by date created", () => {
+  test("responds with an comments array of objects sorted by date created", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .then(({ body }) => {
@@ -220,20 +220,20 @@ describe("GET /api/articles/:articleid/comments", () => {
       .then(({ body }) => {
         expect(body.comments).toEqual([
           {
-            comment_id: 14,
-            body: "What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.",
-            votes: 16,
-            author: "icellusedkars",
-            article_id: 5,
-            created_at: "2020-06-09T05:00:00.000Z",
-          },
-          {
             comment_id: 15,
             body: "I am 100% sure that we're not completely sure.",
             votes: 1,
             author: "butter_bridge",
             article_id: 5,
             created_at: "2020-11-24T00:08:00.000Z",
+          },
+          {
+            comment_id: 14,
+            body: "What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.",
+            votes: 16,
+            author: "icellusedkars",
+            article_id: 5,
+            created_at: "2020-06-09T05:00:00.000Z",
           },
         ]);
       });

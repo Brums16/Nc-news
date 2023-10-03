@@ -262,3 +262,74 @@ describe("GET /api/articles/:articleid/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:articleid/comments", () => {
+  const newComment = {
+    username: "butter_bridge",
+    body: "this article completely changed the way I think about the content of the article",
+  };
+  test("responds with status code 201 and comment that was added", () => {
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send(newComment)
+      .then(({ body }) => {
+        expect(201);
+        expect(body.comment.comment_id).toBe(19);
+        expect(body.comment.body).toBe(
+          "this article completely changed the way I think about the content of the article"
+        );
+        expect(body.comment.article_id).toBe(4);
+        expect(body.comment.author).toBe("butter_bridge");
+        expect(body.comment.votes).toBe(0);
+        expect(body.comment.hasOwnProperty("created_at")).toBe(true);
+      });
+  });
+  test("responds with a 404 code and appropriate error message when passed an article id that is not in the database", () => {
+    return request(app)
+      .post("/api/articles/50/comments")
+      .send(newComment)
+      .then(({ text }) => {
+        expect(404);
+        expect(text).toBe(
+          'Key (article_id)=(50) is not present in table "articles".'
+        );
+      });
+  });
+  test("responds with a 400 code and appropriate error message when passed an invalid article id", () => {
+    return request(app)
+      .post("/api/articles/banana/comments")
+      .send(newComment)
+      .then(({ text }) => {
+        expect(400);
+        expect(text).toBe("Bad Request, id must be an integer");
+      });
+  });
+  test("responds with a 404 code and appropriate error message when username does not exist", () => {
+    const invalidUserComment = {
+      username: "invaliduser16",
+      body: "I'm not a registered user so my comment is invalid",
+    };
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send(invalidUserComment)
+      .then(({ text }) => {
+        expect(400);
+        expect(text).toBe(
+          'Key (author)=(invaliduser16) is not present in table "users".'
+        );
+      });
+  });
+  test("responds with a 400 code and appropriate error message request formatted incorrectly", () => {
+    const invalidUserComment = {
+      user: "someone",
+      bod: "the body is missing a y!",
+    };
+    return request(app)
+      .post("/api/articles/10/comments")
+      .send(invalidUserComment)
+      .then(({ text }) => {
+        expect(400);
+        expect(text).toBe("Bad request");
+      });
+  });
+});

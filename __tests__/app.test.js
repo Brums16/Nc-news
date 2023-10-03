@@ -320,16 +320,38 @@ describe("POST /api/articles/:articleid/comments", () => {
       });
   });
   test("responds with a 400 code and appropriate error message request formatted incorrectly", () => {
-    const invalidUserComment = {
+    const invalidProperties = {
       user: "someone",
       bod: "the body is missing a y!",
     };
     return request(app)
       .post("/api/articles/10/comments")
-      .send(invalidUserComment)
+      .send(invalidProperties)
       .then(({ text }) => {
         expect(400);
         expect(text).toBe("Bad request");
+      });
+  });
+  test("ignores extra properties on the request body, responds with 201 status code and created comment", () => {
+    const extraProperties = {
+      username: "butter_bridge",
+      body: "I have added more things to the request body to try to bring down the system!",
+      extraProp: "this property is irrelevant",
+      anotherProp: "this one too",
+    };
+    return request(app)
+      .post("/api/articles/7/comments")
+      .send(extraProperties)
+      .then(({ body }) => {
+        expect(201);
+        expect(body.comment.comment_id).toBe(19);
+        expect(body.comment.body).toBe(
+          "I have added more things to the request body to try to bring down the system!"
+        );
+        expect(body.comment.article_id).toBe(7);
+        expect(body.comment.author).toBe("butter_bridge");
+        expect(body.comment.votes).toBe(0);
+        expect(body.comment.hasOwnProperty("created_at")).toBe(true);
       });
   });
 });

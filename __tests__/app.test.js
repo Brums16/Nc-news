@@ -206,6 +206,14 @@ describe("GET /api/articles/:articleid/comments", () => {
         ).toBe(true);
       });
   });
+  test.only("responds with an comments array of objects sorted by date created", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .then(({ body }) => {
+        console.log(body.comments);
+        expect(body.comments).toBeSortedBy("created_at", { descending: true });
+      });
+  });
   test("responds with the correct array of comment objects for a given article", () => {
     return request(app)
       .get("/api/articles/5/comments")

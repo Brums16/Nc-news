@@ -55,6 +55,7 @@ exports.fetchCommentsByArticleId = async (id) => {
       SELECT articles.article_id, comments.author, comments.body, comment_id, comments.created_at, comments.votes FROM articles LEFT JOIN comments
       ON articles.article_id = comments.article_id
       WHERE articles.article_id = $1
+      ORDER BY created_at DESC
      `,
     [id]
   );

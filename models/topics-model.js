@@ -64,10 +64,6 @@ exports.fetchCommentsByArticleId = async (id) => {
       status: 404,
       msg: `No article found for article_id ${id}`,
     });
-  else if (rows[0].comment_id === null)
-    return Promise.reject({
-      status: 404,
-      msg: `No comments found for article_id ${id}`,
-    });
+  else if (rows[0].comment_id === null) return [];
   else return rows;
 };

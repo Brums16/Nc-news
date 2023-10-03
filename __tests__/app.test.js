@@ -238,24 +238,27 @@ describe("GET /api/articles/:articleid/comments", () => {
         ]);
       });
   });
-  test("responds with a 404 code when passed an invalid article id", () => {
-    return request(app).get("/api/articles/50/comments").expect(404);
-  });
-  test("responds with appropriate error message when passed invalid article id", () => {
+  test("responds with a 404 code and appropriate error message when passed an article id that is not in the database", () => {
     return request(app)
       .get("/api/articles/50/comments")
       .then(({ text }) => {
+        expect(404);
         expect(text).toBe("No article found for article_id 50");
       });
   });
-  test("responds with a 404 code when passed an article id for an article with no comments", () => {
-    return request(app).get("/api/articles/8/comments").expect(404);
+  test("responds with a 400 code and appropriate error message when passed an invalid article id", () => {
+    return request(app)
+      .get("/api/articles/invalidid/comments")
+      .then(({ text }) => {
+        expect(400);
+        expect(text).toBe("Bad Request, id must be an integer");
+      });
   });
-  test("responds with appropriate error message when passed a valid article id with no comments", () => {
+  test("responds with an empty array when passed a valid article id with no comments", () => {
     return request(app)
       .get("/api/articles/8/comments")
-      .then(({ text }) => {
-        expect(text).toBe("No comments found for article_id 8");
+      .then(({ body }) => {
+        expect(body.comments).toEqual([]);
       });
   });
 });

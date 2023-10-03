@@ -49,6 +49,7 @@ exports.getCommentsByArticleId = async (req, res, next) => {
     const foundComments = await fetchCommentsByArticleId(id);
     return res.send({ comments: foundComments });
   } catch (err) {
+    console.log(err, "<---error in controller");
     next(err);
   }
 };

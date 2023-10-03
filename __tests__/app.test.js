@@ -169,3 +169,96 @@ describe("GET /api/articles", () => {
       });
   });
 });
+
+describe("GET /api/articles/:articleid/comments", () => {
+  test("responds with status code 200", () => {
+    return request(app).get("/api/articles/9/comments").expect(200);
+  });
+  test("responds with an array", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .then(({ body }) => {
+        expect(Array.isArray(body.comments)).toBe(true);
+      });
+  });
+  test("responds with an array of comment objects containing the correct properties", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .then(({ body }) => {
+        const commentsArray = body.comments;
+        expect(
+          commentsArray.every((comment) => comment.hasOwnProperty("author"))
+        ).toBe(true);
+        expect(
+          commentsArray.every((comment) => comment.hasOwnProperty("comment_id"))
+        ).toBe(true);
+        expect(
+          commentsArray.every((comment) => comment.hasOwnProperty("body"))
+        ).toBe(true);
+        expect(
+          commentsArray.every((comment) => comment.hasOwnProperty("created_at"))
+        ).toBe(true);
+        expect(
+          commentsArray.every((comment) => comment.hasOwnProperty("votes"))
+        ).toBe(true);
+        expect(
+          commentsArray.every((comment) => comment.hasOwnProperty("article_id"))
+        ).toBe(true);
+      });
+  });
+  test("responds with an comments array of objects sorted by date created", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .then(({ body }) => {
+        console.log(body.comments);
+        expect(body.comments).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("responds with the correct array of comment objects for a given article", () => {
+    return request(app)
+      .get("/api/articles/5/comments")
+      .then(({ body }) => {
+        expect(body.comments).toEqual([
+          {
+            comment_id: 15,
+            body: "I am 100% sure that we're not completely sure.",
+            votes: 1,
+            author: "butter_bridge",
+            article_id: 5,
+            created_at: "2020-11-24T00:08:00.000Z",
+          },
+          {
+            comment_id: 14,
+            body: "What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.",
+            votes: 16,
+            author: "icellusedkars",
+            article_id: 5,
+            created_at: "2020-06-09T05:00:00.000Z",
+          },
+        ]);
+      });
+  });
+  test("responds with a 404 code and appropriate error message when passed an article id that is not in the database", () => {
+    return request(app)
+      .get("/api/articles/50/comments")
+      .then(({ text }) => {
+        expect(404);
+        expect(text).toBe("No article found for article_id 50");
+      });
+  });
+  test("responds with a 400 code and appropriate error message when passed an invalid article id", () => {
+    return request(app)
+      .get("/api/articles/invalidid/comments")
+      .then(({ text }) => {
+        expect(400);
+        expect(text).toBe("Bad Request, id must be an integer");
+      });
+  });
+  test("responds with an empty array when passed a valid article id with no comments", () => {
+    return request(app)
+      .get("/api/articles/8/comments")
+      .then(({ body }) => {
+        expect(body.comments).toEqual([]);
+      });
+  });
+});

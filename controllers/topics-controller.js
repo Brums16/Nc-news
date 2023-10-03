@@ -3,6 +3,7 @@ const {
   fetchEndpoints,
   fetchArticleById,
   fetchAllArticles,
+  fetchCommentsByArticleId,
 } = require("../models/topics-model");
 
 exports.getTopics = async (req, res, next) => {
@@ -34,12 +35,21 @@ exports.getArticleById = async (req, res, next) => {
 };
 
 exports.getAllArticles = async (req, res, next) => {
-  // console.log("in the controller");
   try {
     const foundArticles = await fetchAllArticles();
-    // console.log(foundArticles, "foundArticles in the controller");
     return res.send({ articles: foundArticles });
   } catch (err) {
+    next(err);
+  }
+};
+
+exports.getCommentsByArticleId = async (req, res, next) => {
+  const id = req.params.article_id;
+  try {
+    const foundComments = await fetchCommentsByArticleId(id);
+    return res.send({ comments: foundComments });
+  } catch (err) {
+    console.log(err, "<---error in controller");
     next(err);
   }
 };

@@ -48,3 +48,26 @@ exports.fetchAllArticles = async () => {
   );
   return rows;
 };
+
+exports.fetchCommentsByArticleId = async (id) => {
+  const { rows } = await db.query(
+    `
+      SELECT articles.article_id, comments.author, comments.body, comment_id, comments.created_at, comments.votes FROM articles LEFT JOIN comments
+      ON articles.article_id = comments.article_id
+      WHERE articles.article_id = $1
+     `,
+    [id]
+  );
+  console.log(rows);
+  if (!rows[0])
+    return Promise.reject({
+      status: 404,
+      msg: `No article found for article_id ${id}`,
+    });
+  else if (rows[0].comment_id === null)
+    return Promise.reject({
+      status: 404,
+      msg: `No comments found for article_id ${id}`,
+    });
+  else return rows;
+};

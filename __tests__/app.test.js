@@ -107,6 +107,7 @@ describe.only("GET /api/articles", () => {
   test("responds with status code 200", () => {
     return request(app).get("/api/articles").expect(200);
   });
+
   test("responds with an articles array", () => {
     return request(app)
       .get("/api/articles")

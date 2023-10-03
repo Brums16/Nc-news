@@ -71,7 +71,7 @@ describe("GET /api", () => {
   });
 });
 
-describe.only("GET /api/articles/:articleid", () => {
+describe("GET /api/articles/:articleid", () => {
   test("responds with status code 200", () => {
     return request(app).get("/api/articles/6").expect(200);
   });

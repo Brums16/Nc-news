@@ -4,6 +4,7 @@ const { app } = require("../app.js");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection");
 const expectedEndpoint = require("../endpoints.json");
+require("jest-sorted");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -98,6 +99,72 @@ describe("GET /api/articles/:articleid", () => {
       .get("/api/articles/50")
       .then(({ text }) => {
         expect(text).toBe("No article found for article_id: 50");
+      });
+  });
+});
+
+describe.only("GET /api/articles", () => {
+  test("responds with status code 200", () => {
+    return request(app).get("/api/articles").expect(200);
+  });
+  test("responds with an articles array", () => {
+    return request(app)
+      .get("/api/articles")
+      .then(({ body }) => {
+        expect(Array.isArray(body.articles)).toBe(true);
+      });
+  });
+  test("responds with an articles array of objects containing the correct properties", () => {
+    return request(app)
+      .get("/api/articles")
+      .then(({ body }) => {
+        const articlesArray = body.articles;
+        expect(
+          articlesArray.every((article) => article.hasOwnProperty("author"))
+        ).toBe(true);
+        expect(
+          articlesArray.every((article) => article.hasOwnProperty("title"))
+        ).toBe(true);
+        expect(
+          articlesArray.every((article) => article.hasOwnProperty("article_id"))
+        ).toBe(true);
+        expect(
+          articlesArray.every((article) => article.hasOwnProperty("topic"))
+        ).toBe(true);
+        expect(
+          articlesArray.every((article) => article.hasOwnProperty("created_at"))
+        ).toBe(true);
+        expect(
+          articlesArray.every((article) => article.hasOwnProperty("votes"))
+        ).toBe(true);
+        expect(
+          articlesArray.every((article) =>
+            article.hasOwnProperty("article_img_url")
+          )
+        ).toBe(true);
+        expect(
+          articlesArray.every((article) =>
+            article.hasOwnProperty("comment_count")
+          )
+        ).toBe(true);
+        expect(
+          articlesArray.every((article) => article.hasOwnProperty("body"))
+        ).toBe(false);
+      });
+  });
+  test("responds with an articles array of objects sorted by date created", () => {
+    return request(app)
+      .get("/api/articles")
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("comment count property correctly calculates number of comments for each article", () => {
+    return request(app)
+      .get("/api/articles")
+      .then(({ body }) => {
+        expect(body.articles[6].comment_count).toBe(11);
+        expect(body.articles[0].comment_count).toBe(2);
       });
   });
 });

@@ -1,3 +1,3 @@
 exports.errorHandler = (err, req, res, next) => {
-  res.status(400).send(err.message);
+  res.status(err.status).send(err.msg);
 };

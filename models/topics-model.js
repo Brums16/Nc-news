@@ -58,7 +58,6 @@ exports.fetchCommentsByArticleId = async (id) => {
      `,
     [id]
   );
-  console.log(rows);
   if (!rows[0])
     return Promise.reject({
       status: 404,

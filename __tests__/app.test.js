@@ -185,7 +185,6 @@ describe("GET /api/articles/:articleid/comments", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .then(({ body }) => {
-        console.log(body, "body in the test");
         const commentsArray = body.comments;
         expect(
           commentsArray.every((comment) => comment.hasOwnProperty("author"))

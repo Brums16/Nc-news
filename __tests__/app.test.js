@@ -210,7 +210,6 @@ describe("GET /api/articles/:articleid/comments", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .then(({ body }) => {
-        console.log(body.comments);
         expect(body.comments).toBeSortedBy("created_at", { descending: true });
       });
   });

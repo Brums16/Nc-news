@@ -7,6 +7,7 @@ const {
   insertComment,
   updateArticle,
   deleteComment,
+  fetchUsers,
 } = require("../models/topics-model");
 
 exports.getTopics = async (req, res, next) => {
@@ -90,6 +91,17 @@ exports.removeComment = async (req, res, next) => {
     await deleteComment(id);
     return res.sendStatus(204);
   } catch (err) {
+    console.log(err, "err in controller");
+    next(err);
+  }
+};
+
+exports.getUsers = async (req, res, next) => {
+  try {
+    const foundUsers = await fetchUsers();
+    return res.send({ users: foundUsers });
+  } catch (err) {
+    console.log(err, "err in controller");
     next(err);
   }
 };

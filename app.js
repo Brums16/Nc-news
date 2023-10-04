@@ -8,6 +8,7 @@ const {
   addComment,
   changeArticle,
   removeComment,
+  getUsers,
 } = require("./controllers/topics-controller");
 const { errorHandler } = require("./error-handler");
 
@@ -28,6 +29,8 @@ app
   .post(addComment);
 
 app.route("/api/comments/:comment_id").delete(removeComment);
+
+app.route("/api/users").get(getUsers);
 
 app.use(errorHandler);
 

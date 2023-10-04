@@ -3,8 +3,10 @@ const db = require("../db/connection");
 exports.fetchArticleById = async (id) => {
   const { rows } = await db.query(
     `
-        SELECT * FROM articles
-        WHERE article_id = $1
+    SELECT * FROM (SELECT articles.*, CAST(COUNT(comment_id) AS int) AS comment_count
+    FROM articles 
+    LEFT JOIN comments ON comments.article_id = articles.article_id
+    GROUP BY articles.article_id) AS count_table WHERE article_id = $1
        `,
     [id]
   );

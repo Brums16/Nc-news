@@ -522,3 +522,79 @@ describe("GET /api/users", () => {
       });
   });
 });
+
+describe.only("PATCH /api/comments/:commentid/", () => {
+  const moreVotes = {
+    inc_votes: 3,
+  };
+  const lessVotes = {
+    inc_votes: -2,
+  };
+  const invalidVotes = {
+    inc_votes: "banana",
+  };
+  const noVotes = {
+    colour: "green",
+  };
+  test("responds with status code 200 and the updated comment when incrementing votes", () => {
+    return request(app)
+      .patch("/api/comments/4")
+      .send(moreVotes)
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+        expect(body.comment).toEqual({
+          comment_id: 4,
+          article_id: 1,
+          author: "icellusedkars",
+          body: " I carry a log — yes. Is it funny to you? It is not to me.",
+          created_at: "2020-02-23T12:01:00.000Z",
+          votes: -97,
+        });
+      });
+  });
+  test("responds with status code 200 and the updated comment when decrementing votes", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send(lessVotes)
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+        expect(body.comment).toEqual({
+          comment_id: 1,
+          article_id: 9,
+          author: "butter_bridge",
+          body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+          created_at: "2020-04-06T12:17:00.000Z",
+          votes: 14,
+        });
+      });
+  });
+  test("responds with a 404 code and appropriate error message when passed an comment id that is not in the database", () => {
+    return request(app)
+      .patch("/api/comments/5000")
+      .send(moreVotes)
+      .expect(404)
+      .then(({ text }) => {
+        expect(text).toBe("No comment found for comment_id 5000");
+      });
+  });
+  test("responds with a 400 code and appropriate error message when passed a request object with an invalid votes value", () => {
+    return request(app)
+      .patch("/api/comments/5/")
+      .send(invalidVotes)
+      .expect(400)
+      .then(({ text }) => {
+        expect(text).toBe("Bad Request");
+      });
+  });
+  test("responds with a 400 code and appropriate error message when passed a request object without a votes property", () => {
+    return request(app)
+      .patch("/api/comments/5")
+      .send(noVotes)
+      .expect(400)
+      .then(({ text }) => {
+        expect(text).toBe("Bad Request");
+      });
+  });
+});

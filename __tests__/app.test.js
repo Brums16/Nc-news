@@ -457,7 +457,7 @@ describe("DELETE /api/comments/:comment_id", () => {
   });
 });
 
-describe.only("GET /api/users", () => {
+describe("GET /api/users", () => {
   test("responds with status code 200", () => {
     return request(app).get("/api/users").expect(200);
   });

@@ -35,7 +35,7 @@ exports.fetchArticleById = async (id) => {
   return rows[0];
 };
 
-exports.fetchAllArticles = async () => {
+exports.fetchArticles = async () => {
   const { rows } = await db.query(
     `
       SELECT articles.article_id, title, topic, articles.author, articles.created_at,

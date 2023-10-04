@@ -2,7 +2,7 @@ const {
   fetchTopics,
   fetchEndpoints,
   fetchArticleById,
-  fetchAllArticles,
+  fetchArticles,
   fetchCommentsByArticleId,
   insertComment,
   updateArticle,
@@ -40,9 +40,9 @@ exports.getArticleById = async (req, res, next) => {
   }
 };
 
-exports.getAllArticles = async (req, res, next) => {
+exports.getArticles = async (req, res, next) => {
   try {
-    const foundArticles = await fetchAllArticles();
+    const foundArticles = await fetchArticles();
     return res.send({ articles: foundArticles });
   } catch (err) {
     console.log(err, "error in controller");

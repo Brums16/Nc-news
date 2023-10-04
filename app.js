@@ -3,7 +3,7 @@ const {
   getTopics,
   getEndpoints,
   getArticleById,
-  getAllArticles,
+  getArticles,
   getCommentsByArticleId,
   addComment,
   changeArticle,
@@ -21,7 +21,7 @@ app.route("/api/topics").get(getTopics);
 
 app.route("/api/articles/:article_id").get(getArticleById).patch(changeArticle);
 
-app.route("/api/articles").get(getAllArticles);
+app.route("/api/articles").get(getArticles);
 
 app
   .route("/api/articles/:article_id/comments")

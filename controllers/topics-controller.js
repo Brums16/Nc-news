@@ -5,6 +5,7 @@ const {
   fetchAllArticles,
   fetchCommentsByArticleId,
   insertComment,
+  updateArticle,
 } = require("../models/topics-model");
 
 exports.getTopics = async (req, res, next) => {
@@ -66,6 +67,18 @@ exports.addComment = async (req, res, next) => {
     return res.send({ comment: addedComment });
   } catch (err) {
     console.log(err, "error in controller");
+    next(err);
+  }
+};
+
+exports.changeArticle = async (req, res, next) => {
+  const id = req.params.article_id;
+  const { inc_votes } = req.body;
+  try {
+    const updatedArticle = await updateArticle(inc_votes, id);
+    return res.send({ article: updatedArticle });
+  } catch (err) {
+    console.log(err, "err in controller");
     next(err);
   }
 };

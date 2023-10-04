@@ -250,7 +250,7 @@ describe("GET /api/articles/:articleid/comments", () => {
       .get("/api/articles/invalidid/comments")
       .then(({ text }) => {
         expect(400);
-        expect(text).toBe("Bad Request, id must be an integer");
+        expect(text).toBe("Bad Request");
       });
   });
   test("responds with an empty array when passed a valid article id with no comments", () => {
@@ -300,7 +300,7 @@ describe("POST /api/articles/:articleid/comments", () => {
       .send(newComment)
       .then(({ text }) => {
         expect(400);
-        expect(text).toBe("Bad Request, id must be an integer");
+        expect(text).toBe("Bad Request");
       });
   });
   test("responds with a 404 code and appropriate error message when username does not exist", () => {
@@ -328,7 +328,7 @@ describe("POST /api/articles/:articleid/comments", () => {
       .send(invalidProperties)
       .then(({ text }) => {
         expect(400);
-        expect(text).toBe("Bad request");
+        expect(text).toBe("Bad Request");
       });
   });
   test("ignores extra properties on the request body, responds with 201 status code and created comment", () => {
@@ -351,6 +351,86 @@ describe("POST /api/articles/:articleid/comments", () => {
         expect(body.comment.author).toBe("butter_bridge");
         expect(body.comment.votes).toBe(0);
         expect(body.comment.hasOwnProperty("created_at")).toBe(true);
+      });
+  });
+});
+
+describe("PATCH /api/articles/:articleid/", () => {
+  const moreVotes = {
+    inc_votes: 3,
+  };
+  const lessVotes = {
+    inc_votes: -2,
+  };
+  const invalidVotes = {
+    inc_votes: "banana",
+  };
+  const noVotes = {
+    colour: "green",
+  };
+  test("responds with status code 200 and the updated article when incrementing votes", () => {
+    return request(app)
+      .patch("/api/articles/4/")
+      .send(moreVotes)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual({
+          article_id: 4,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          author: "rogersop",
+          body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
+          created_at: "2020-05-06T01:14:00.000Z",
+          title: "Student SUES Mitch!",
+          topic: "mitch",
+          votes: 3,
+        });
+      });
+  });
+  test("responds with status code 200 and the updated article when decrementing votes", () => {
+    return request(app)
+      .patch("/api/articles/1/")
+      .send(lessVotes)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual({
+          article_id: 1,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          votes: 98,
+        });
+      });
+  });
+  test("responds with a 404 code and appropriate error message when passed an article id that is not in the database", () => {
+    return request(app)
+      .patch("/api/articles/50/")
+      .send(moreVotes)
+      .expect(404)
+      .then(({ text }) => {
+        expect(text).toBe("No article found for article_id 50");
+      });
+  });
+  test("responds with a 400 code and appropriate error message when passed a request object with an invalid votes value", () => {
+    return request(app)
+      .patch("/api/articles/5/")
+      .send(invalidVotes)
+      .expect(400)
+      .then(({ text }) => {
+        expect(text).toBe("Bad Request");
+      });
+  });
+  test("responds with a 400 code and appropriate error message when passed a request object without a votes property", () => {
+    return request(app)
+      .patch("/api/articles/5/")
+      .send(noVotes)
+      .expect(400)
+      .then(({ text }) => {
+        expect(text).toBe("Bad Request");
       });
   });
 });

@@ -99,6 +99,5 @@ exports.updateArticle = async (inc_votes, id) => {
       status: 404,
       msg: `No article found for article_id ${id}`,
     });
-  console.log(rows, "rows in model");
   return rows[0];
 };

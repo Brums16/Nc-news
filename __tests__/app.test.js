@@ -415,7 +415,7 @@ describe("PATCH /api/articles/:articleid/", () => {
         expect(text).toBe("No article found for article_id 50");
       });
   });
-  test("responds with a 400 code and appropriate error message when passed an article id that is not in the database", () => {
+  test("responds with a 400 code and appropriate error message when passed a request object with an invalid votes value", () => {
     return request(app)
       .patch("/api/articles/5/")
       .send(invalidVotes)
@@ -424,7 +424,7 @@ describe("PATCH /api/articles/:articleid/", () => {
         expect(text).toBe("Bad Request");
       });
   });
-  test("responds with a 400 code and appropriate error message when passed an article id that is not in the database", () => {
+  test("responds with a 400 code and appropriate error message when passed a request object without a votes property", () => {
     return request(app)
       .patch("/api/articles/5/")
       .send(noVotes)

@@ -44,21 +44,7 @@ exports.fetchArticles = async (topic) => {
   GROUP BY articles.article_id
   ORDER BY created_at DESC
  `;
-  if (topic) {
-    queryStr = `SELECT articles.article_id, title, topic, articles.author, articles.created_at,
-    articles.votes, article_img_url, CAST(COUNT(comment_id) AS int) AS comment_count
-    FROM articles 
-    LEFT JOIN comments ON comments.article_id = articles.article_id
-    WHERE articles.topic = '${topic}'
-    GROUP BY articles.article_id
-    ORDER BY created_at DESC;`;
-  }
   const { rows } = await db.query(queryStr);
-  if (!rows[0])
-    return Promise.reject({
-      status: 404,
-      msg: `No articles found for topic: ${topic}`,
-    });
   return rows;
 };
 

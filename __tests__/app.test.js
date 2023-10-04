@@ -522,3 +522,112 @@ describe("GET /api/users", () => {
       });
   });
 });
+
+describe("POST /api/articles", () => {
+  const newArticle = {
+    author: "butter_bridge",
+    title: "Emily is best dog, hates the topic of cats though",
+    body: "she really is, they really are hated by her",
+    topic: "cats",
+    article_img_url: "emily-looking-cute.jpg",
+  };
+  test("responds with status code 201 and comment that was added", () => {
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.article.article_id).toBe(14);
+        expect(body.article.body).toBe(
+          "she really is, they really are hated by her"
+        );
+        expect(body.article.topic).toBe("cats");
+        expect(body.article.title).toBe(
+          "Emily is best dog, hates the topic of cats though"
+        );
+        expect(body.article.author).toBe("butter_bridge");
+        expect(body.article.votes).toBe(0);
+        expect(body.article.hasOwnProperty("created_at")).toBe(true);
+        expect(body.article.comment_count).toBe(0);
+      });
+  });
+  test("responds with a 404 code and appropriate error message when username does not exist", () => {
+    const invalidUserArticle = {
+      author: "invaliduser16",
+      title: "doesnt matter",
+      body: "something",
+      topic: "cats",
+      article_img_url: "best-image-ever.jpg",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(invalidUserArticle)
+      .then(({ text }) => {
+        expect(400);
+        expect(text).toBe(
+          'Key (author)=(invaliduser16) is not present in table "users".'
+        );
+      });
+  });
+  test("responds with a 404 code and appropriate error message when topic does not exist", () => {
+    const invalidUserArticle = {
+      author: "butter_bridge",
+      title: "doesnt matter",
+      body: "something",
+      topic: "anewtopic",
+      article_img_url: "best-image-ever.jpg",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(invalidUserArticle)
+      .then(({ text }) => {
+        expect(400);
+        expect(text).toBe(
+          'Key (topic)=(anewtopic) is not present in table "topics".'
+        );
+      });
+  });
+  test("responds with a 400 code and appropriate error message request formatted incorrectly", () => {
+    const invalidProperties = {
+      auth: "aname",
+      titel: "wrong titel",
+      bod: "missing a y!",
+      topi: "cats",
+      article_img_url: "an-image.jpg",
+    };
+    return request(app)
+      .post("/api/articles/10/comments")
+      .send(invalidProperties)
+      .then(({ text }) => {
+        expect(400);
+        expect(text).toBe("Bad Request");
+      });
+  });
+  test("ignores extra properties on the request body, responds with 201 status code and created comment", () => {
+    const extraProperties = {
+      author: "butter_bridge",
+      title: "Emily is best dog, hates the topic of cats though",
+      body: "she really is, they really are hated by her",
+      topic: "cats",
+      article_img_url: "emily-looking-cute.jpg",
+      anotherProp: "why but doesnt matter",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(extraProperties)
+      .then(({ body }) => {
+        expect(body.article.article_id).toBe(14);
+        expect(body.article.body).toBe(
+          "she really is, they really are hated by her"
+        );
+        expect(body.article.topic).toBe("cats");
+        expect(body.article.title).toBe(
+          "Emily is best dog, hates the topic of cats though"
+        );
+        expect(body.article.author).toBe("butter_bridge");
+        expect(body.article.votes).toBe(0);
+        expect(body.article.hasOwnProperty("created_at")).toBe(true);
+        expect(body.article.comment_count).toBe(0);
+      });
+  });
+});

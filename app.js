@@ -7,6 +7,7 @@ const {
   getCommentsByArticleId,
   addComment,
   changeArticle,
+  removeComment,
 } = require("./controllers/topics-controller");
 const { errorHandler } = require("./error-handler");
 
@@ -25,6 +26,8 @@ app
   .route("/api/articles/:article_id/comments")
   .get(getCommentsByArticleId)
   .post(addComment);
+
+app.route("/api/comments/:comment_id").delete(removeComment);
 
 app.use(errorHandler);
 

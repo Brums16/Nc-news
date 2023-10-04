@@ -12,6 +12,7 @@ const {
 const { addComment } = require("./controllers/add-comment");
 const { removeComment } = require("./controllers/remove-comment");
 const { getUsers } = require("./controllers/get-users");
+const { getUserByUsername } = require("./controllers/get-user-by-username");
 
 const app = express();
 app.use(express.json());
@@ -32,6 +33,8 @@ app
 app.route("/api/comments/:comment_id").delete(removeComment);
 
 app.route("/api/users").get(getUsers);
+
+app.route("/api/users/:username").get(getUserByUsername);
 
 app.use(errorHandler);
 

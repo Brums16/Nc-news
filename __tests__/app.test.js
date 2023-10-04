@@ -522,3 +522,30 @@ describe("GET /api/users", () => {
       });
   });
 });
+
+describe.only("GET /api/users/:username", () => {
+  test("responds with status code 200", () => {
+    return request(app).get("/api/users/butter_bridge").expect(200);
+  });
+  test("responds with the correct user object", () => {
+    return request(app)
+      .get("/api/users/butter_bridge")
+      .then(({ body }) => {
+        expect(body.user.avatar_url).toBe(
+          "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        );
+        expect(body.user.name).toBe("jonny");
+        expect(body.user.username).toBe("butter_bridge");
+      });
+  });
+  test("responds with a 404 code when passed an username not in database", () => {
+    return request(app).get("/api/users/emily99").expect(404);
+  });
+  test("responds with appropriate error message when passed username not in database", () => {
+    return request(app)
+      .get("/api/users/emily99")
+      .then(({ text }) => {
+        expect(text).toBe("No user found for username: emily99");
+      });
+  });
+});

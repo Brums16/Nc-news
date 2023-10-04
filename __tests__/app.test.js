@@ -103,7 +103,7 @@ describe("GET /api/articles/:articleid", () => {
   });
 });
 
-describe.only("GET /api/articles", () => {
+describe("GET /api/articles", () => {
   test("responds with status code 200", () => {
     return request(app).get("/api/articles").expect(200);
   });

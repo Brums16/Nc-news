@@ -6,6 +6,7 @@ const {
   fetchCommentsByArticleId,
   insertComment,
   updateArticle,
+  deleteComment,
 } = require("../models/topics-model");
 
 exports.getTopics = async (req, res, next) => {
@@ -79,6 +80,16 @@ exports.changeArticle = async (req, res, next) => {
     return res.send({ article: updatedArticle });
   } catch (err) {
     console.log(err, "err in controller");
+    next(err);
+  }
+};
+
+exports.removeComment = async (req, res, next) => {
+  const id = req.params.comment_id;
+  try {
+    await deleteComment(id);
+    return res.sendStatus(204);
+  } catch (err) {
     next(err);
   }
 };

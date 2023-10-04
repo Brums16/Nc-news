@@ -250,7 +250,7 @@ describe("GET /api/articles/:articleid/comments", () => {
       .get("/api/articles/invalidid/comments")
       .then(({ text }) => {
         expect(400);
-        expect(text).toBe("Bad Request, id must be an integer");
+        expect(text).toBe("Bad Request");
       });
   });
   test("responds with an empty array when passed a valid article id with no comments", () => {
@@ -300,7 +300,7 @@ describe("POST /api/articles/:articleid/comments", () => {
       .send(newComment)
       .then(({ text }) => {
         expect(400);
-        expect(text).toBe("Bad Request, id must be an integer");
+        expect(text).toBe("Bad Request");
       });
   });
   test("responds with a 404 code and appropriate error message when username does not exist", () => {
@@ -328,7 +328,7 @@ describe("POST /api/articles/:articleid/comments", () => {
       .send(invalidProperties)
       .then(({ text }) => {
         expect(400);
-        expect(text).toBe("Bad request");
+        expect(text).toBe("Bad Request");
       });
   });
   test("ignores extra properties on the request body, responds with 201 status code and created comment", () => {
@@ -355,7 +355,7 @@ describe("POST /api/articles/:articleid/comments", () => {
   });
 });
 
-describe.only("PATCH /api/articles/:articleid/", () => {
+describe("PATCH /api/articles/:articleid/", () => {
   const moreVotes = {
     inc_votes: 3,
   };

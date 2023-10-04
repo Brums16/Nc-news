@@ -3,11 +3,12 @@ const {
   getTopics,
   getEndpoints,
   getArticleById,
-  getAllArticles,
+  getArticles,
   getCommentsByArticleId,
   addComment,
   changeArticle,
   removeComment,
+  getUsers,
 } = require("./controllers/topics-controller");
 const { errorHandler } = require("./error-handler");
 
@@ -20,7 +21,7 @@ app.route("/api/topics").get(getTopics);
 
 app.route("/api/articles/:article_id").get(getArticleById).patch(changeArticle);
 
-app.route("/api/articles").get(getAllArticles);
+app.route("/api/articles").get(getArticles);
 
 app
   .route("/api/articles/:article_id/comments")
@@ -28,6 +29,8 @@ app
   .post(addComment);
 
 app.route("/api/comments/:comment_id").delete(removeComment);
+
+app.route("/api/users").get(getUsers);
 
 app.use(errorHandler);
 

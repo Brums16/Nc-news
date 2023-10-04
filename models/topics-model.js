@@ -35,17 +35,16 @@ exports.fetchArticleById = async (id) => {
   return rows[0];
 };
 
-exports.fetchAllArticles = async () => {
-  const { rows } = await db.query(
-    `
-      SELECT articles.article_id, title, topic, articles.author, articles.created_at,
-      articles.votes, article_img_url, CAST(COUNT(comment_id) AS int) AS comment_count
-      FROM articles 
-      LEFT JOIN comments ON comments.article_id = articles.article_id
-      GROUP BY articles.article_id
-      ORDER BY created_at DESC;
-     `
-  );
+exports.fetchArticles = async (topic) => {
+  let queryStr = `
+  SELECT articles.article_id, title, topic, articles.author, articles.created_at,
+  articles.votes, article_img_url, CAST(COUNT(comment_id) AS int) AS comment_count
+  FROM articles 
+  LEFT JOIN comments ON comments.article_id = articles.article_id
+  GROUP BY articles.article_id
+  ORDER BY created_at DESC
+ `;
+  const { rows } = await db.query(queryStr);
   return rows;
 };
 
@@ -76,7 +75,6 @@ exports.insertComment = async (username, body, id) => {
      `,
     [username, body, id]
   );
-  console.log(rows[0]);
   if (!rows[0])
     return Promise.reject({
       status: 404,
@@ -115,4 +113,13 @@ exports.deleteComment = async (id) => {
       msg: `No comment found for comment_id ${id}`,
     });
   }
+};
+
+exports.fetchUsers = async () => {
+  const { rows } = await db.query(
+    `
+      SELECT username, name, avatar_url FROM users;
+     `
+  );
+  return rows;
 };

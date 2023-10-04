@@ -168,6 +168,52 @@ describe("GET /api/articles", () => {
         expect(body.articles[0].comment_count).toBe(2);
       });
   });
+  // test("query of topic returns only articles of that topic", () => {
+  //   return request(app)
+  //     .get("/api/articles?topic=mitch")
+  //     .then(({ body }) => {
+  //       const articlesArray = body.articles;
+  //       expect(
+  //         articlesArray.every((article) => article.hasOwnProperty("author"))
+  //       ).toBe(true);
+  //       expect(
+  //         articlesArray.every((article) => article.hasOwnProperty("title"))
+  //       ).toBe(true);
+  //       expect(
+  //         articlesArray.every((article) => article.hasOwnProperty("article_id"))
+  //       ).toBe(true);
+  //       expect(
+  //         articlesArray.every((article) => article.topic === "mitch")
+  //       ).toBe(true);
+  //       expect(
+  //         articlesArray.every((article) => article.hasOwnProperty("created_at"))
+  //       ).toBe(true);
+  //       expect(
+  //         articlesArray.every((article) => article.hasOwnProperty("votes"))
+  //       ).toBe(true);
+  //       expect(
+  //         articlesArray.every((article) =>
+  //           article.hasOwnProperty("article_img_url")
+  //         )
+  //       ).toBe(true);
+  //       expect(
+  //         articlesArray.every((article) =>
+  //           article.hasOwnProperty("comment_count")
+  //         )
+  //       ).toBe(true);
+  //       expect(
+  //         articlesArray.every((article) => article.hasOwnProperty("body"))
+  //       ).toBe(false);
+  //     });
+  // });
+  // test("if topic queried does not exist, returns 404 error and appropriate message", () => {
+  //   return request(app)
+  //     .get("/api/articles?topic=unknowntopic")
+  //     .expect(404)
+  //     .then(({ text }) => {
+  //       expect(text).toBe("No articles found for topic: unknowntopic");
+  //     });
+  // });
 });
 
 describe("GET /api/articles/:articleid/comments", () => {
@@ -453,6 +499,26 @@ describe("DELETE /api/comments/:comment_id", () => {
       .expect(400)
       .then(({ text }) => {
         expect(text).toBe("Bad Request");
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("responds with status code 200", () => {
+    return request(app).get("/api/users").expect(200);
+  });
+  test("responds with an array of user objects with username, name and avatar_url properties", () => {
+    return request(app)
+      .get("/api/users")
+      .then((response) => {
+        const { users } = response.body;
+        expect(users.every((user) => user.hasOwnProperty("username"))).toBe(
+          true
+        );
+        expect(users.every((user) => user.hasOwnProperty("name"))).toBe(true);
+        expect(users.every((user) => user.hasOwnProperty("avatar_url"))).toBe(
+          true
+        );
       });
   });
 });

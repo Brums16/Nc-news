@@ -1,5 +1,5 @@
 \c nc_news
 
-SELECT * FROM articles 
-OFFSET 5 ROWS FETCH NEXT 5 ROWS ONLY;
+SELECT COUNT(*) FROM comments
+WHERE article_id = 1;
 

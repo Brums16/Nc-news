@@ -270,7 +270,6 @@ describe("GET /api/articles", () => {
     return request(app)
       .get("/api/articles?limit=5")
       .then(({ body }) => {
-        console.log(body, "body in the test");
         expect(body.articles.length).toBe(5);
       });
   });

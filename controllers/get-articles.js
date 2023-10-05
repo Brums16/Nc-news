@@ -1,3 +1,4 @@
+const { fetchArticleCount } = require("../models/fetch-article-count");
 const { fetchArticles } = require("../models/fetch-articles");
 
 exports.getArticles = async (req, res, next) => {
@@ -5,7 +6,11 @@ exports.getArticles = async (req, res, next) => {
 
   try {
     const foundArticles = await fetchArticles(topic, sort_by, order, limit, p);
-    return res.send({ articles: foundArticles });
+    const articleCount = await fetchArticleCount();
+    return res.send({
+      articles: foundArticles,
+      totalCount: articleCount.count,
+    });
   } catch (err) {
     console.log(err, "err in controller");
     next(err);

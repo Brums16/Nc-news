@@ -784,3 +784,50 @@ describe("GET /api/users/:username", () => {
       });
   });
 });
+
+describe.only("POST /api/topics", () => {
+  const newTopic = {
+    slug: "dogs",
+    description: "The topic of dogs, mostly emily",
+  };
+  test("responds with status code 201 and topic that was added", () => {
+    return request(app)
+      .post("/api/topics")
+      .send(newTopic)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.topic.slug).toBe("dogs");
+        expect(body.topic.description).toBe("The topic of dogs, mostly emily");
+      });
+  });
+  test("responds with a 400 code and appropriate error message request formatted incorrectly", () => {
+    const invalidProperties = {
+      auth: "aname",
+      titel: "wrong titel",
+      bod: "missing a y!",
+      topi: "cats",
+      Topic_img_url: "an-image.jpg",
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(invalidProperties)
+      .then(({ text }) => {
+        expect(400);
+        expect(text).toBe("Bad Request");
+      });
+  });
+  test("ignores extra properties on the request body, responds with 201 status code and created comment", () => {
+    const extraProperties = {
+      slug: "colours",
+      description: "blue, green and red",
+      extraProp: "not needed at all",
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(extraProperties)
+      .then(({ body }) => {
+        expect(body.topic.slug).toBe("colours");
+        expect(body.topic.description).toBe("blue, green and red");
+      });
+  });
+});

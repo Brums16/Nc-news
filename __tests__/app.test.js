@@ -132,7 +132,7 @@ describe("GET /api/articles/:articleid", () => {
   });
 });
 
-describe("GET /api/articles", () => {
+describe.only("GET /api/articles", () => {
   test("responds with status code 200", () => {
     return request(app).get("/api/articles").expect(200);
   });
@@ -241,6 +241,29 @@ describe("GET /api/articles", () => {
       .expect(404)
       .then(({ text }) => {
         expect(text).toBe("No articles found for topic: unknowntopic");
+      });
+  });
+  test("sort_by query sorts the returned articles by the passed column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("votes", { descending: true });
+      });
+  });
+  test("sort_by query with order query sorts the returned articles by the passed column in ascending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author&order=asc")
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("author");
+      });
+  });
+  test("sort_by query with order query sorts the returned articles by the passed column in the passed order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=comment_count&order=desc")
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("comment_count", {
+          descending: true,
+        });
       });
   });
 });

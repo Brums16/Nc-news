@@ -1,7 +1,11 @@
 const db = require("../db/connection");
 const format = require("pg-format");
 
-exports.fetchArticles = async (topic) => {
+exports.fetchArticles = async (
+  topic,
+  sort_by = "created_at",
+  order = "DESC"
+) => {
   let topicString = "";
   if (topic) {
     topicString = `WHERE topic = '${topic}'`;
@@ -14,9 +18,11 @@ exports.fetchArticles = async (topic) => {
   LEFT JOIN comments ON comments.article_id = articles.article_id
   %s
   GROUP BY articles.article_id
-  ORDER BY created_at DESC
+  ORDER BY %s %s
  `,
-    topicString
+    topicString,
+    sort_by,
+    order
   );
 
   const { rows } = await db.query(queryString);

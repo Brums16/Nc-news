@@ -10,6 +10,7 @@ exports.fetchArticleCount = async (topic) => {
     "SELECT CAST(COUNT(*) AS integer) FROM articles %s",
     topicString
   );
+  console.log(queryString);
   const { rows } = await db.query(queryString);
   return rows[0];
 };

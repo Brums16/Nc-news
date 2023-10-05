@@ -523,7 +523,6 @@ describe("GET /api/users", () => {
   });
 });
 
-
 describe("POST /api/articles", () => {
   const newArticle = {
     author: "butter_bridge",
@@ -629,6 +628,9 @@ describe("POST /api/articles", () => {
         expect(body.article.votes).toBe(0);
         expect(body.article.hasOwnProperty("created_at")).toBe(true);
         expect(body.article.comment_count).toBe(0);
+      });
+  });
+});
 
 describe("PATCH /api/comments/:commentid/", () => {
   const moreVotes = {
@@ -729,7 +731,6 @@ describe("GET /api/users/:username", () => {
       .get("/api/users/emily99")
       .then(({ text }) => {
         expect(text).toBe("No user found for username: emily99");
-
       });
   });
 });

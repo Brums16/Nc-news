@@ -523,7 +523,6 @@ describe("GET /api/users", () => {
   });
 });
 
-
 describe("PATCH /api/comments/:commentid/", () => {
   const moreVotes = {
     inc_votes: 3,
@@ -596,6 +595,9 @@ describe("PATCH /api/comments/:commentid/", () => {
       .expect(400)
       .then(({ text }) => {
         expect(text).toBe("Bad Request");
+      });
+  });
+});
 
 describe("GET /api/users/:username", () => {
   test("responds with status code 200", () => {
@@ -620,7 +622,6 @@ describe("GET /api/users/:username", () => {
       .get("/api/users/emily99")
       .then(({ text }) => {
         expect(text).toBe("No user found for username: emily99");
-
       });
   });
 });

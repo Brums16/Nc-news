@@ -270,7 +270,7 @@ describe("GET /api/articles", () => {
     return request(app)
       .get("/api/articles?limit=5")
       .then(({ body }) => {
-        console.log(body.articles);
+        console.log(body, "body in the test");
         expect(body.articles.length).toBe(5);
       });
   });
@@ -405,6 +405,37 @@ describe("GET /api/articles/:articleid/comments", () => {
       .get("/api/articles/8/comments")
       .then(({ body }) => {
         expect(body.comments).toEqual([]);
+      });
+  });
+  test("including limit query of 5 returns the first 5 comments", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=5")
+      .then(({ body }) => {
+        expect(body.comments.length).toBe(5);
+      });
+  });
+  test("including limit query of 2, page 3 returns the 5th and 6th comment", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=2&p=3")
+      .then(({ body }) => {
+        expect(body.comments).toEqual([
+          {
+            article_id: 1,
+            author: "icellusedkars",
+            body: "Lobster pot",
+            comment_id: 7,
+            created_at: "2020-05-15T20:19:00.000Z",
+            votes: 0,
+          },
+          {
+            article_id: 1,
+            author: "icellusedkars",
+            body: "Delicious crackerbreads",
+            comment_id: 8,
+            created_at: "2020-04-14T20:19:00.000Z",
+            votes: 0,
+          },
+        ]);
       });
   });
 });

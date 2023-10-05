@@ -7,6 +7,6 @@ exports.removeArticle = async (req, res, next) => {
     const removeArticle = await deleteArticle(id);
     return res.sendStatus(204);
   } catch (err) {
-    console.log(err);
+    next(err);
   }
 };

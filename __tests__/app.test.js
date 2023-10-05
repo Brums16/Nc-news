@@ -82,6 +82,7 @@ describe("GET /api/articles/:articleid", () => {
       .then(({ body }) => {
         expect(body.article.title).toBe("Z");
         expect(body.article.article_id).toBe(7);
+        expect(body.article.author).toBe("icellusedkars");
         expect(body.article.body).toBe("I was hungry.");
         expect(body.article.topic).toBe("mitch");
         expect(body.article.created_at).toBe("2020-01-07T14:08:00.000Z");
@@ -99,6 +100,34 @@ describe("GET /api/articles/:articleid", () => {
       .get("/api/articles/50")
       .then(({ text }) => {
         expect(text).toBe("No article found for article_id: 50");
+      });
+  });
+  test("responds with an object with a property of comment_count", () => {
+    return request(app)
+      .get("/api/articles/7")
+      .then(({ body }) => {
+        expect(body.article.hasOwnProperty("comment_count")).toBe(true);
+      });
+  });
+  test("responds with the fully correct article object including comment_count", () => {
+    return request(app)
+      .get("/api/articles/5")
+      .then(({ body }) => {
+        expect(body.article.title).toBe(
+          "UNCOVERED: catspiracy to bring down democracy"
+        );
+        expect(body.article.article_id).toBe(5);
+        expect(body.article.body).toBe(
+          "Bastet walks amongst us, and the cats are taking arms!"
+        );
+        expect(body.article.author).toBe("rogersop");
+        expect(body.article.topic).toBe("cats");
+        expect(body.article.created_at).toBe("2020-08-03T13:14:00.000Z");
+        expect(body.article.votes).toBe(0);
+        expect(body.article.article_img_url).toBe(
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        );
+        expect(body.article.comment_count).toBe(2);
       });
   });
 });

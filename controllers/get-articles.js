@@ -6,7 +6,7 @@ exports.getArticles = async (req, res, next) => {
 
   try {
     const foundArticles = await fetchArticles(topic, sort_by, order, limit, p);
-    const articleCount = await fetchArticleCount();
+    const articleCount = await fetchArticleCount(topic);
     return res.send({
       articles: foundArticles,
       totalCount: articleCount.count,

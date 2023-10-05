@@ -910,3 +910,25 @@ describe("POST /api/topics", () => {
       });
   });
 });
+
+describe.only("DELETE /api/articles/:article_id", () => {
+  test("responds with status code 204", () => {
+    return request(app).delete("/api/articles/3").expect(204);
+  });
+  test("responds with status 404 and appropriate error message if article id not found", () => {
+    return request(app)
+      .delete("/api/articles/3000")
+      .expect(404)
+      .then(({ text }) => {
+        expect(text).toBe("No article found for article_id 3000");
+      });
+  });
+  test("responds with status 404 and appropriate error message if article id not valid", () => {
+    return request(app)
+      .delete("/api/articles/hello")
+      .expect(400)
+      .then(({ text }) => {
+        expect(text).toBe("Bad Request");
+      });
+  });
+});

@@ -16,3 +16,6 @@ exports.getArticles = async (req, res, next) => {
     next(err);
   }
 };
+
+// the articlesCount query needed to be separated from the foundComments query
+// to satisfy the pagination tasks

@@ -266,6 +266,55 @@ describe("GET /api/articles", () => {
         });
       });
   });
+  test("including limit query of 5 returns the 5 most recent articles", () => {
+    return request(app)
+      .get("/api/articles?limit=5")
+      .then(({ body }) => {
+        console.log(body.articles);
+        expect(body.articles.length).toBe(5);
+      });
+  });
+  test("including limit query of 3, page 2 sort_by article_id order asc returns article objects with article_ids 4,5 and 6", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_id&order=asc&limit=3&p=2")
+      .then(({ body }) => {
+        expect(body.articles).toEqual([
+          {
+            article_id: 4,
+            title: "Student SUES Mitch!",
+            topic: "mitch",
+            author: "rogersop",
+            created_at: "2020-05-06T01:14:00.000Z",
+            votes: 0,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            comment_count: 0,
+          },
+          {
+            article_id: 5,
+            title: "UNCOVERED: catspiracy to bring down democracy",
+            topic: "cats",
+            author: "rogersop",
+            created_at: "2020-08-03T13:14:00.000Z",
+            votes: 0,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            comment_count: 2,
+          },
+          {
+            article_id: 6,
+            title: "A",
+            topic: "mitch",
+            author: "icellusedkars",
+            created_at: "2020-10-18T01:00:00.000Z",
+            votes: 0,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            comment_count: 1,
+          },
+        ]);
+      });
+  });
 });
 
 describe("GET /api/articles/:articleid/comments", () => {

@@ -4,12 +4,21 @@ const format = require("pg-format");
 exports.fetchArticles = async (
   topic,
   sort_by = "created_at",
-  order = "DESC"
+  order = "DESC",
+  limit,
+  p = 1
 ) => {
   let topicString = "";
   if (topic) {
     topicString = `WHERE topic = '${topic}'`;
   }
+  let paginationString = "";
+  if (limit) {
+    paginationString = `OFFSET ${
+      (p - 1) * limit
+    } ROWS FETCH NEXT ${limit} ROWS ONLY`;
+  }
+
   const queryString = format(
     `
   SELECT articles.article_id, title, topic, articles.author, articles.created_at,
@@ -19,10 +28,12 @@ exports.fetchArticles = async (
   %s
   GROUP BY articles.article_id
   ORDER BY %s %s
+  %s
  `,
     topicString,
     sort_by,
-    order
+    order,
+    paginationString
   );
 
   const { rows } = await db.query(queryString);

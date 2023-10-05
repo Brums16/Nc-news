@@ -1,5 +1,5 @@
 \c nc_news
 
 SELECT * FROM articles
-WHERE topic = 'football'
+WHERE topic = 'coding'
 

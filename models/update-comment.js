@@ -14,6 +14,5 @@ exports.updateComment = async (inc_votes, id) => {
       status: 404,
       msg: `No comment found for comment_id ${id}`,
     });
-  console.log(rows, "rows in model");
   return rows[0];
 };

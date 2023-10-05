@@ -15,31 +15,20 @@ const { getUsers } = require("./controllers/get-users");
 const { addArticle } = require("./controllers/add-article");
 const { changeComment } = require("./controllers/change-comment");
 const { getUserByUsername } = require("./controllers/get-user-by-username");
+const articlesRouter = require("./routes/articles-router");
+const topicsRouter = require("./routes/topics-router");
+const usersRouter = require("./routes/users-router");
+const commentsRouter = require("./routes/comments-router");
 
 const app = express();
 app.use(express.json());
 
 app.route("/api").get(getEndpoints);
 
-app.route("/api/topics").get(getTopics);
-
-app.route("/api/articles/:article_id").get(getArticleById).patch(changeArticle);
-
-app.route("/api/articles").get(getArticles).post(addArticle);
-
-app
-  .route("/api/articles/:article_id/comments")
-  .get(getCommentsByArticleId)
-  .post(addComment);
-
-app
-  .route("/api/comments/:comment_id")
-  .delete(removeComment)
-  .patch(changeComment);
-
-app.route("/api/users").get(getUsers);
-
-app.route("/api/users/:username").get(getUserByUsername);
+app.use("/api/articles", articlesRouter);
+app.use("/api/topics", topicsRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/comments", commentsRouter);
 
 app.use(errorHandler);
 

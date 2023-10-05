@@ -703,7 +703,6 @@ describe("PATCH /api/comments/:commentid/", () => {
       .send(moreVotes)
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         expect(body.comment).toEqual({
           comment_id: 4,
           article_id: 1,
@@ -720,7 +719,6 @@ describe("PATCH /api/comments/:commentid/", () => {
       .send(lessVotes)
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         expect(body.comment).toEqual({
           comment_id: 1,
           article_id: 9,

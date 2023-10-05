@@ -191,6 +191,18 @@
       "topic": "mitch",
       "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
   }
+},
+"POST /api/topics/": {
+  "description": "adds a new topic",
+  "queries": [],
+  "exampleResponse": {
+      "topic": 
+      { "slug": "dogs", 
+      "description": "The topic of dogs, mostly emily" }  },
+  "requestFormat": {
+    "slug": "dogs", 
+      "description": "The topic of dogs, mostly emily"
+}
 }
 }
 

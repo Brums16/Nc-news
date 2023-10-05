@@ -785,7 +785,7 @@ describe("GET /api/users/:username", () => {
   });
 });
 
-describe.only("POST /api/topics", () => {
+describe("POST /api/topics", () => {
   const newTopic = {
     slug: "dogs",
     description: "The topic of dogs, mostly emily",

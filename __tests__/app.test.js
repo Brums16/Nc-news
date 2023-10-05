@@ -523,6 +523,7 @@ describe("GET /api/users", () => {
   });
 });
 
+
 describe("POST /api/articles", () => {
   const newArticle = {
     author: "butter_bridge",
@@ -628,6 +629,107 @@ describe("POST /api/articles", () => {
         expect(body.article.votes).toBe(0);
         expect(body.article.hasOwnProperty("created_at")).toBe(true);
         expect(body.article.comment_count).toBe(0);
+
+describe("PATCH /api/comments/:commentid/", () => {
+  const moreVotes = {
+    inc_votes: 3,
+  };
+  const lessVotes = {
+    inc_votes: -2,
+  };
+  const invalidVotes = {
+    inc_votes: "banana",
+  };
+  const noVotes = {
+    colour: "green",
+  };
+  test("responds with status code 200 and the updated comment when incrementing votes", () => {
+    return request(app)
+      .patch("/api/comments/4")
+      .send(moreVotes)
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+        expect(body.comment).toEqual({
+          comment_id: 4,
+          article_id: 1,
+          author: "icellusedkars",
+          body: " I carry a log — yes. Is it funny to you? It is not to me.",
+          created_at: "2020-02-23T12:01:00.000Z",
+          votes: -97,
+        });
+      });
+  });
+  test("responds with status code 200 and the updated comment when decrementing votes", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send(lessVotes)
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+        expect(body.comment).toEqual({
+          comment_id: 1,
+          article_id: 9,
+          author: "butter_bridge",
+          body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+          created_at: "2020-04-06T12:17:00.000Z",
+          votes: 14,
+        });
+      });
+  });
+  test("responds with a 404 code and appropriate error message when passed an comment id that is not in the database", () => {
+    return request(app)
+      .patch("/api/comments/5000")
+      .send(moreVotes)
+      .expect(404)
+      .then(({ text }) => {
+        expect(text).toBe("No comment found for comment_id 5000");
+      });
+  });
+  test("responds with a 400 code and appropriate error message when passed a request object with an invalid votes value", () => {
+    return request(app)
+      .patch("/api/comments/5/")
+      .send(invalidVotes)
+      .expect(400)
+      .then(({ text }) => {
+        expect(text).toBe("Bad Request");
+      });
+  });
+  test("responds with a 400 code and appropriate error message when passed a request object without a votes property", () => {
+    return request(app)
+      .patch("/api/comments/5")
+      .send(noVotes)
+      .expect(400)
+      .then(({ text }) => {
+        expect(text).toBe("Bad Request");
+      });
+  });
+});
+
+describe("GET /api/users/:username", () => {
+  test("responds with status code 200", () => {
+    return request(app).get("/api/users/butter_bridge").expect(200);
+  });
+  test("responds with the correct user object", () => {
+    return request(app)
+      .get("/api/users/butter_bridge")
+      .then(({ body }) => {
+        expect(body.user.avatar_url).toBe(
+          "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        );
+        expect(body.user.name).toBe("jonny");
+        expect(body.user.username).toBe("butter_bridge");
+      });
+  });
+  test("responds with a 404 code when passed an username not in database", () => {
+    return request(app).get("/api/users/emily99").expect(404);
+  });
+  test("responds with appropriate error message when passed username not in database", () => {
+    return request(app)
+      .get("/api/users/emily99")
+      .then(({ text }) => {
+        expect(text).toBe("No user found for username: emily99");
+
       });
   });
 });

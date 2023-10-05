@@ -13,6 +13,8 @@ const { addComment } = require("./controllers/add-comment");
 const { removeComment } = require("./controllers/remove-comment");
 const { getUsers } = require("./controllers/get-users");
 const { addArticle } = require("./controllers/add-article");
+const { changeComment } = require("./controllers/change-comment");
+const { getUserByUsername } = require("./controllers/get-user-by-username");
 
 const app = express();
 app.use(express.json());
@@ -30,9 +32,14 @@ app
   .get(getCommentsByArticleId)
   .post(addComment);
 
-app.route("/api/comments/:comment_id").delete(removeComment);
+app
+  .route("/api/comments/:comment_id")
+  .delete(removeComment)
+  .patch(changeComment);
 
 app.route("/api/users").get(getUsers);
+
+app.route("/api/users/:username").get(getUserByUsername);
 
 app.use(errorHandler);
 

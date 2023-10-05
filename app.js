@@ -12,9 +12,9 @@ const {
 const { addComment } = require("./controllers/add-comment");
 const { removeComment } = require("./controllers/remove-comment");
 const { getUsers } = require("./controllers/get-users");
+const { addArticle } = require("./controllers/add-article");
 const { changeComment } = require("./controllers/change-comment");
 const { getUserByUsername } = require("./controllers/get-user-by-username");
-
 
 const app = express();
 app.use(express.json());
@@ -25,7 +25,7 @@ app.route("/api/topics").get(getTopics);
 
 app.route("/api/articles/:article_id").get(getArticleById).patch(changeArticle);
 
-app.route("/api/articles").get(getArticles);
+app.route("/api/articles").get(getArticles).post(addArticle);
 
 app
   .route("/api/articles/:article_id/comments")

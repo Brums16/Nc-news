@@ -12,4 +12,7 @@ PGDATABASE=nc_news
 
 PGDATABASE=nc_news_test
 
-You will need
+Required:
+
+node 0.3.2
+psql 14.9

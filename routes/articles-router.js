@@ -6,7 +6,7 @@ const { getArticles } = require("../controllers/get-articles");
 const {
   getCommentsByArticleId,
 } = require("../controllers/get-comments-by-article-id");
-const { removeArticle } = require("../controllers/remove-article");
+const { removeArticle, removeArticlesByAuthor } = require("../controllers/remove-article");
 
 const articlesRouter = require("express").Router();
 
@@ -22,5 +22,9 @@ articlesRouter
   .route("/:article_id/comments")
   .get(getCommentsByArticleId)
   .post(addComment);
+
+articlesRouter
+  .route("/author/:author")
+  .delete(removeArticlesByAuthor);
 
 module.exports = articlesRouter;
